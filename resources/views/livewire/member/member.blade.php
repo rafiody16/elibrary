@@ -93,7 +93,7 @@
                         <div class="mt-2 px-4 py-3 text-left">
                             {{-- Include the correct form --}}
                             @if ($id_member)
-                                @include('livewire.book.edit')
+                                @include('livewire.member.edit')
                             @else
                                 @include('livewire.member.create')
                             @endif
@@ -106,7 +106,7 @@
                                     Update
                                 </button>
                             @else
-                                <button wire:click.prevent="storeMember()"
+                                {{-- <button wire:click.prevent="storeMember()"
                                     class="px-4 py-2 bg-blue-600 text-white text-base font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300"
                                     wire:loading.attr="disabled"
                                     wire:target="storeMember()">
@@ -117,7 +117,7 @@
                                         </svg>
                                     </span>
                                     Save
-                                </button>
+                                </button> --}}
                             @endif
                             <button wire:click.prevent="closeModal()"
                                 class="ml-3 px-4 py-2 bg-gray-300 text-gray-800 text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
