@@ -43,4 +43,13 @@ class LoginController extends Controller
             ]);
         }
     }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        return response()->json([
+            'success' => true,
+            'message' => 'Logged out successfully',
+        ]);
+    }
 }
