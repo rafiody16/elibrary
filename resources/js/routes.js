@@ -3,6 +3,7 @@ import Login from './components/auth/Login.vue';
 import Role from './components/role/Role.vue';
 import Category from './components/category/Category.vue';
 import Book from './components/book/Book.vue';
+import Member from './components/member/Member.vue';
 
 export default [
   {
@@ -33,5 +34,10 @@ export default [
     path: '/book',
     name: 'book',
     component: Book,
+  },
+  {
+    path: '/member',
+    name: 'member',
+    component: Member,
   }
 ];

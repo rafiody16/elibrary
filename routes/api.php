@@ -6,12 +6,20 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\MemberController;
+use App\Models\Member;
 use App\Models\Role;
 use App\Models\Category;
 use App\Models\Book;
+use App\Models\User;
 
 // Auth Routes
 Route::post('register', [RegisterController::class, 'registration']);
+Route::get('/users', function () {
+    return response()->json([
+        'users' => User::all(),
+    ]);
+});
 // Role Routes
 Route::delete('/role/delete/{id}', [RoleController::class, 'destroy']);
 Route::post('/role/create', [RoleController::class, 'store']);
@@ -39,3 +47,13 @@ Route::get('/books', function () {
 Route::post('/book/create', [BookController::class, 'store']);
 Route::put('/book/update/{id}', [BookController::class, 'update']);
 Route::delete('/book/delete/{id}', [BookController::class, 'destroy']);
+// Member Routes
+Route::get('/members', function () {
+    return response()->json([
+        'members' => Member::all(),
+    ]);
+});
+Route::get('/userAvail', [MemberController::class, 'getAvailableUsers']);
+Route::post('/member/create', [MemberController::class, 'store']);
+Route::put('/member/update/{id}', [MemberController::class, 'update']);
+Route::delete('/member/delete/{id}', [MemberController::class, 'destroy']);

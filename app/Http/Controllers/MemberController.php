@@ -26,14 +26,13 @@ class MemberController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'id_user' => 'required|integer|exists:users,id_user',
-            'id_card' => 'required|string|max:20|unique:members,id_card',
+            'id_user' => 'required|integer|exists:users,id',
             'name_member' => 'required|string|max:50',
             'photo_member' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'address' => 'required|string|max:255',
             'place_of_birth' => 'required|string|max:50',
             'date_of_birth' => 'required|date',
-            'phone' => 'required|string|max:15',
+            'phone_number' => 'required|string|max:15',
             'job' => 'required|string|max:50',
         ];
 
@@ -47,7 +46,7 @@ class MemberController extends Controller
         }
 
         if ($request->hasFile('photo_member')) {
-            $photoPath = $request->file('photo_member')->store('members');
+            $photoPath = $request->file('photo_member')->store('members', 'public');
         } else {
             $photoPath = null;
         }
@@ -60,7 +59,7 @@ class MemberController extends Controller
             'address' => $request->address,
             'place_of_birth' => $request->place_of_birth,
             'date_of_birth' => $request->date_of_birth,
-            'phone' => $request->phone,
+            'phone_number' => $request->phone_number,
             'job' => $request->job,
         ]);
 
@@ -80,13 +79,13 @@ class MemberController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'id_user' => 'required|integer|exists:users,id_user',
+            'id_user' => 'required|integer|exists:users,id',
             'name_member' => 'required|string|max:50',
             'photo_member' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'address' => 'required|string|max:255',
             'place_of_birth' => 'required|string|max:50',
             'date_of_birth' => 'required|date',
-            'phone' => 'required|string|max:15',
+            'phone_number' => 'required|string|max:15',
             'job' => 'required|string|max:50',
         ];
 
@@ -103,9 +102,9 @@ class MemberController extends Controller
 
         if ($request->hasFile('photo_member')) {
             if ($member->photo_member) {
-                Storage::delete($member->photo_member);
+                Storage::disk('public')->delete($member->photo_member);
             }
-            $photoPath = $request->file('photo_member')->store('members');
+            $photoPath = $request->file('photo_member')->store('members', 'public');
         } else {
             $photoPath = $member->photo_member;
         }
@@ -117,7 +116,7 @@ class MemberController extends Controller
             'address' => $request->address,
             'place_of_birth' => $request->place_of_birth,
             'date_of_birth' => $request->date_of_birth,
-            'phone' => $request->phone,
+            'phone_number' => $request->phone_number,
             'job' => $request->job,
         ]);
 
@@ -131,7 +130,7 @@ class MemberController extends Controller
     {
         $member = Member::findOrFail($id);
         if ($member->photo_member) {
-            Storage::delete($member->photo_member);
+            Storage::disk('public')->delete($member->photo_member);
         }
         $member->delete();
 
@@ -139,6 +138,23 @@ class MemberController extends Controller
             'success' => true,
             'message' => 'Member deleted successfully',
         ]);
+    }
+
+    public function getAvailableUsers(Request $request)
+    {
+        $usedUserIds = Member::pluck('id_user')->toArray();
+
+        if ($request->has('current_id_user')) {
+            $currentId = (int) $request->input('current_id_user');
+            $users = User::where(function ($query) use ($usedUserIds, $currentId) {
+                $query->whereNotIn('id', $usedUserIds)
+                    ->orWhere('id', $currentId);
+            })->get();
+        } else {
+            $users = User::whereNotIn('id', $usedUserIds)->get();
+        }
+
+        return response()->json(['users' => $users]);
     }
     
 }
