@@ -5,7 +5,7 @@
                 <div class="col-12">
                     <div class="card shadow-lg" style="border-radius: 15px;">
                         <div class="card-header bg-primary text-white text-center" style="border-radius: 15px 15px 0 0;">
-                            <h3 class="mb-0">Role Management</h3>
+                            <h3 class="mb-0">Category Data</h3>
                         </div>
                         <div class="card-body p-5">
                             <div class="d-flex justify-content-between mb-4">
@@ -23,23 +23,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(role, index) in roles" :key="role.id_role">
+                                    <tr v-for="(category, index) in categories" :key="category.id_category">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ role.name_role }}</td>
-                                        <td>{{ role.description }}</td>
+                                        <td>{{ category.name_category }}</td>
+                                        <td>{{ category.description }}</td>
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <button class="btn btn-warning sm" @click="updateRole(role)">Edit</button>
-                                                <button class="btn btn-danger sm" @click="deleteRole(role.id_role)">Delete</button>
+                                                <button class="btn btn-warning sm" @click="updateCategory(category)">Edit</button>
+                                                <button class="btn btn-danger sm" @click="deleteCategory(category.id_category)">Delete</button>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr v-if="roles.length === 0">
-                                        <td colspan="4" class="text-center">No roles found</td>
+                                    <tr v-if="categories.length === 0">
+                                        <td colspan="4" class="text-center">No categorys found</td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <RoleForm v-if="showCreateForm" :role="currentRole" @close="closeModal" @refreshRoles="getData" />
+                            <CategoryForm v-if="showCreateForm" :category="currentCategory" @close="closeModal" @refreshCategories="getData" />
                         </div>
                     </div>
                 </div>
@@ -49,42 +49,42 @@
 </template>
 <script>
     import axios from 'axios';
-    import RoleForm from './RoleForm.vue';
+    import CategoryForm from './CategoryForm.vue';
 
     export default {
         components: {
-            RoleForm
+            CategoryForm
         },
         data() {
             return {
-                roles: [],
+                categories: [],
                 error: null,
                 success: null,
                 showCreateForm: false,
-                currentRole: null,
+                currentCategory: null,
             };
         },
         methods: {
             getData() {
                 this.error = null;
                 this.success = null;
-                axios.get('api/roles')
+                axios.get('api/categories')
                     .then(response => {
-                        this.roles = response.data.roles;
+                        this.categories = response.data.categories;
                     })
                     .catch(error => {
-                        this.error = 'Error fetching roles';
+                        this.error = 'Error fetching categories';
                     });
             },
-            deleteRole(roleId) {
-                if (confirm('Are you sure you want to delete this role?')) {
-                    axios.delete(`api/role/delete/${roleId}`)
+            deleteCategory(categoryId) {
+                if (confirm('Are you sure you want to delete this category?')) {
+                    axios.delete(`api/category/delete/${categoryId}`)
                         .then(() => {
-                            this.success = 'Role deleted successfully';
+                            this.success = 'category deleted successfully';
                             this.getData();
                     })
                     .catch(()=> {
-                        this.error = 'Error deleting role';
+                        this.error = 'Error deleting category';
                     });
                 }
             },
@@ -94,10 +94,10 @@
             },
             closeModal() {
                 this.showCreateForm = false;
-                this.currentRole = null;
+                this.currentCategory = null;
             },
-            updateRole(role) {
-                this.currentRole = role;
+            updateCategory(category) {
+                this.currentCategory = category;
                 this.showCreateForm = true;
             },
         },
