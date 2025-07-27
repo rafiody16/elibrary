@@ -1,5 +1,6 @@
-import Register from './views/Register.vue';
-import Login from './views/Login.vue';
+import Register from './components/auth/Register.vue';
+import Login from './components/auth/Login.vue';
+import Role from './components/role/Role.vue';
 
 export default [
   {
@@ -15,5 +16,10 @@ export default [
     path: '/register',
     name: 'register',
     component: Register
+  },
+  {
+    path: '/role',
+    name: 'role',
+    component: Role,
   }
 ];

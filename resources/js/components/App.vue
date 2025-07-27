@@ -1,20 +1,9 @@
 <template>
-    <div class="message-model">
-        <p>first component</p>
-    </div>
+  <router-view></router-view>
 </template>
 
-<style scoped>
-.message-model {
-    border: 1px solid yellow;
-    text-align: center;
-    border-radius: 10px;
-    width: 80%;
-    margin: auto;
-    background-color: yellow;
+<script>
+export default {
+  name: 'App'
 }
-.message-model p {
-    font-weight: bold;
-    font-size: 40px;
-}
-</style>
+</script>

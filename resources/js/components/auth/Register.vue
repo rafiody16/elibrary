@@ -1,49 +1,90 @@
 <template>
-    <section class="vh-100 gradient-custom">
+    <section class="vh-100 bg-light">
         <div class="container py-5 h-100">
             <div class="row justify-content-center align-items-center h-100">
-                <div class="col-12 col-lg-9 col-xl-7">
-                    <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
-                        <div class="card-body p-4 p-md-5">
-                            <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
-
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card shadow-lg" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                
+                            <h3 class="mb-4 text-center">Registration Form</h3>
+                
+                            <!-- Alert -->
+                            <div v-if="success" class="alert alert-success" role="alert">
+                                {{ success }}
+                            </div>
+                            <div v-if="error" class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+              
                             <form @submit.prevent="submitForm">
-
-                                <div class="mb-4">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" v-model="form.name" class="form-control form-control-lg" required />
+                                <div class="form-group mb-3">
+                                    <label for="name">Name</label>
+                                    <input
+                                      type="text"
+                                      v-model="form.name"
+                                      class="form-control"
+                                      id="name"
+                                      required
+                                    />
                                 </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" v-model="form.email" class="form-control form-control-lg" required />
+                            
+                                <div class="form-group mb-3">
+                                    <label for="email">Email</label>
+                                    <input
+                                      type="email"
+                                      v-model="form.email"
+                                      class="form-control"
+                                      id="email"
+                                      required
+                                    />
                                 </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" v-model="form.password" class="form-control form-control-lg" required />
+                            
+                                <div class="form-group mb-3">
+                                    <label for="password">Password</label>
+                                    <input
+                                      type="password"
+                                      v-model="form.password"
+                                      class="form-control"
+                                      id="password"
+                                      required
+                                    />
                                 </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label">Password Confirmation</label>
-                                    <input type="password" v-model="form.password_confirmation" class="form-control form-control-lg" required />
+                            
+                                <div class="form-group mb-3">
+                                    <label for="password_confirmation">Password Confirmation</label>
+                                    <input
+                                      type="password"
+                                      v-model="form.password_confirmation"
+                                      class="form-control"
+                                      id="password_confirmation"
+                                      required
+                                    />
                                 </div>
-
-                                <div class="mb-4">
-                                    <label class="form-label">Role</label>
-                                    <select v-model="form.id_role" class="form-control-lg">
-                                        <option v-for="role in roles" :value="role.id_role">
-                                            {{ role.name }}
-                                        </option>
+                            
+                                <div class="form-group mb-4">
+                                    <label for="id_role">Role</label>
+                                    <select
+                                      v-model="form.id_role"
+                                      class="form-control"
+                                      id="id_role"
+                                      required
+                                    >
+                                      <option value="" disabled>-- Pilih Role --</option>
+                                      <option
+                                        v-for="role in roles"
+                                        :key="role.id_role"
+                                        :value="role.id_role"
+                                      >
+                                        {{ role.name_role }}
+                                      </option>
                                     </select>
                                 </div>
-
-                                <div class="mt-4 pt-2">
-                                    <button class="btn btn-primary btn-lg" type="submit">Register</button>
-                                </div>
-
+                            
+                                <button type="submit" class="btn btn-primary btn-block">
+                                  Register
+                                </button>
                             </form>
-
+              
                         </div>
                     </div>
                 </div>
@@ -51,59 +92,57 @@
         </div>
     </section>
 </template>
+
 <script>
-    import axios from 'axios';
+import axios from "axios";
 
-    export default {
-        data() {
-            return {
-                form: {
-                    name: '',
-                    email: '',
-                    password: '',
-                    password_confirmation: '',
-                    id_role: '',
-                },
-
-                roles: [],
-                error: '',
-                success: ''            
-            };
-        },
-        mounted() {
-            this.getRoles();
-        },
-
-        methods: {
-            async getRoles() {
-                try {
-                    const response = await axios.get('/api/roles');
-                    this.roles = response.data.roles;
-                } catch (err) {
-                    this.error = 'Failed to load roles';
-                }
+export default {
+    data() {
+        return {
+            form: {
+                name: "",
+                email: "",
+                password: "",
+                password_confirmation: "",
+                id_role: "",
             },
-            async submitForm() {
-                try {
-                    const response = await axios.post('/api/register', this.form);
-
-                    if (response.data.success) {
-                        this.success = response.data.message;
-                        this.error = '';
-
-                        this.form = {
-                            name: '',
-                            email: '',
-                            password: '',
-                            password_confirmation: '',
-                            id_role: '',
-                        };
-                    }
-                } catch (err) {
-                    this.error = err.response?.data?.message || 'Registration failed';
-                    this.success = '';
-                }
+            roles: [],
+            error: "",
+            success: "",
+        };
+    },
+    mounted() {
+        this.getRoles();
+    },
+    methods: {
+        async getRoles() {
+            try {
+                const response = await axios.get("/api/roles");
+                this.roles = response.data.roles ?? [];
+            } catch (err) {
+                console.error("Gagal load roles", err);
+                this.error = "Gagal mengambil data role.";
             }
-        }
-    };
+        },
+        async submitForm() {
+            try {
+                const response = await axios.post("/api/register", this.form);
+                
+                this.success = response.data.message || "Registrasi berhasil.";
+                this.error = "";
+                
+                this.form = {
+                    name: "",
+                    email: "",
+                    password: "",
+                    password_confirmation: "",
+                    id_role: "",
+                };
+            } catch (err) {
+                this.error = err.response?.data?.message || "Registrasi gagal.";
+                this.success = "";
+            }
+        },
+    },
+};
 </script>
