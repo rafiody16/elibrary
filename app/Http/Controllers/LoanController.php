@@ -8,6 +8,7 @@ use App\Models\Member;
 use App\Models\Book;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class LoanController extends Controller
@@ -31,8 +32,6 @@ class LoanController extends Controller
             'id_member' => 'required|integer|exists:members,id_member',
             'id_book' => 'required|integer|exists:books,id_book',
             'loan_date' => 'required|date',
-            'return_date' => 'nullable|date|after_or_equal:loan_date',
-            'status' => 'required|string|in:borrowed,returned',
         ];
 
         $validate = Validator::make($request->all(), $rules)->validate();
@@ -45,11 +44,36 @@ class LoanController extends Controller
         }
 
         Loan::create([
+            'id_user' => 1,
             'id_member' => $request->id_member,
             'id_book' => $request->id_book,
             'loan_date' => Carbon::parse($request->loan_date),
-            'return_date' => Carbon::parse($request->loan_date)->addDays(7), 
-            'status' => 'borrowed',
+            'due_date' => Carbon::parse($request->loan_date)->addDays(7), 
+        ]);
+
+        DB::table('books')
+            ->where('id_book', $request->id_book)
+            ->decrement('stock', 1);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Loan created successfully',
         ]);
     }
+
+    public function destroy($id)
+    {
+        $loan = Loan::findOrFail($id);
+        $loan->delete();
+
+        DB::table('books')
+            ->where('id_book', $loan->id_book)
+            ->increment('stock', 1);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Loan deleted successfully',
+        ]);
+    }
+
 }

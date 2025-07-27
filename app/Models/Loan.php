@@ -43,34 +43,37 @@ class Loan extends Model
         return $this->belongsTo(User::class, 'id_user');
     }
 
-    protected $appends = ['calculated_fine'];
+    protected $appends = ['totalFine'];
 
-    public function scopeOverdue($query)
+    public function getTotalFineAttribute()
     {
-        return $query->where('status', 'borrowed')
-                     ->where('due_date', '<', now());
+        return $this->fine;
     }
 
-    public function calculateFine($dailyRate = 1000)
+    public function calculatedDelay()
     {
-        if ($this->status === 'borrowed' && $this->due_date < now()) {
-            $lateDays = now()->diffInDays($this->due_date);
-            return $lateDays * $dailyRate;
-        }
+        $dueDate = Carbon::parse($this->due_date)->startOfDay();
+        $today = Carbon::now()->startOfDay();
+        $finePerDay = 1000;
 
-        if ($this->status === 'returned' && $this->return_date && $this->return_date > $this->due_date) {
-            $lateDays = $this->return_date->diffInDays($this->due_date);
-            return $lateDays * $dailyRate;
-        }
+        if (in_array($this->status, ['borrowed', 'overdue']) && $today->greaterThan($dueDate)) {
+            $daysLate = abs($dueDate->diffInDays($today, false));
+            $totalFine = $daysLate * $finePerDay;
 
+            if ($this->status === 'borrowed') {
+                $this->status = 'overdue';
+            }
+
+            if ($this->fine !== $totalFine) {
+                $this->fine = $totalFine;
+            }
+
+            $this->save();
+
+            return $totalFine;
+        } 
         return 0;
     }
-
-    public function getCalculatedFineAttribute()
-    {
-        return $this->calculateFine();
-    }
-
 
 
 }

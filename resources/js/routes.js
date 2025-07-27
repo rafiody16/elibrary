@@ -4,6 +4,7 @@ import Role from './components/role/Role.vue';
 import Category from './components/category/Category.vue';
 import Book from './components/book/Book.vue';
 import Member from './components/member/Member.vue';
+import Loan from './components/loan/Loan.vue';
 
 export default [
   {
@@ -39,5 +40,10 @@ export default [
     path: '/member',
     name: 'member',
     component: Member,
+  },
+  {
+    path: '/loan',
+    name: 'loan',
+    component: Loan,
   }
 ];
