@@ -34,7 +34,6 @@ class BookController extends Controller
             'publication_date' => 'required|date',
             'description' => 'nullable|string|max:500',
             'stock' => 'required|integer|min:0',
-            'isbn' => 'required|string|max:20|unique:books,isbn',
         ];
 
         $validate = Validator::make($request->all(), $rules)->validate();
@@ -47,7 +46,7 @@ class BookController extends Controller
         }
 
         if ($request->hasFile('cover_book')) {
-            $coverPath = $request->file('cover_book')->store('books');
+            $coverPath = $request->file('cover_book')->store('books', 'public');
         } else {
             $coverPath = null;
         }
@@ -88,7 +87,6 @@ class BookController extends Controller
             'publication_date' => 'required|date',
             'description' => 'nullable|string|max:500',
             'stock' => 'required|integer|min:0',
-            'isbn' => 'required|string|max:20|unique:books,isbn,' . $id,
         ];
 
         $validate = Validator::make($request->all(), $rules)->validate();
@@ -104,9 +102,9 @@ class BookController extends Controller
 
         if ($request->hasFile('cover_book')) {
             if ($book->cover_book) {
-                Storage::delete($book->cover_book);
+                Storage::disk('public')->delete($book->cover_book);
             }
-            $coverPath = $request->file('cover_book')->store('books');
+            $coverPath = $request->file('cover_book')->store('books', 'public');
         } else {
             $coverPath = $book->cover_book;
         }
@@ -120,7 +118,6 @@ class BookController extends Controller
             'publication_date' => $request->publication_date,
             'description' => $request->description,
             'stock' => $request->stock,
-            'isbn' => Str::upper($request->isbn),
         ]);
 
         return response()->json([
@@ -133,7 +130,7 @@ class BookController extends Controller
     {
         $book = Book::findOrFail($id);
         if ($book->cover_book) {
-            Storage::delete($book->cover_book);
+            Storage::disk('public')->delete($book->cover_book);
         }
         $book->delete();
 
