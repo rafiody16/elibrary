@@ -6,44 +6,17 @@ import Book from './components/book/Book.vue';
 import Member from './components/member/Member.vue';
 import Loan from './components/loan/Loan.vue';
 
-export default [
-  {
-    path: '/',
-    redirect: '/login' // Otomatis arahkan ke login
-  },
-  {
-    path: '/login',
-    name: 'login',
-    component: Login
-  },
-  {
-    path: '/register',
-    name: 'register',
-    component: Register
-  },
-  {
-    path: '/role',
-    name: 'role',
-    component: Role,
-  },
-  {
-    path: '/category',
-    name: 'category',
-    component: Category,
-  },
-  {
-    path: '/book',
-    name: 'book',
-    component: Book,
-  },
-  {
-    path: '/member',
-    name: 'member',
-    component: Member,
-  },
-  {
-    path: '/loan',
-    name: 'loan',
-    component: Loan,
-  }
+const routes = [
+  { path: '/', redirect: '/login' },
+  { path: '/register', name: 'register', component: Register },
+  { path: '/login', name: 'login', component: Login },
+  { path: '/role', name: 'role', component: Role, meta: { requiresAuth: true } },
+  { path: '/category', name: 'category', component: Category, meta: { requiresAuth: true } },
+  { path: '/book', name: 'book', component: Book, meta: { requiresAuth: true } },
+  { path: '/member', name: 'member', component: Member, meta: { requiresAuth: true } },
+  { path: '/loan', name: 'loan', component: Loan, meta: { requiresAuth: true } },
 ];
+
+export default routes;
+
+

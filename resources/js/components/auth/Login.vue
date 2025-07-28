@@ -1,57 +1,67 @@
 <template>
-    <div class="container">
-        <form>
-            <!-- Email input -->
-            <div data-mdb-input-init class="form-outline mb-4">
-                <input type="email" id="form2Example1" class="form-control" />
-                <label class="form-label" for="form2Example1">Email address</label>
-            </div>
-
-            <!-- Password input -->
-            <div data-mdb-input-init class="form-outline mb-4">
-                <input type="password" id="form2Example2" class="form-control" />
-                <label class="form-label" for="form2Example2">Password</label>
-            </div>
-
-            <!-- 2 column grid layout for inline styling -->
-            <div class="row mb-4">
-                <div class="col d-flex justify-content-center">
-                    <!-- Checkbox -->
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-                      <label class="form-check-label" for="form2Example31"> Remember me </label>
+    <section class="vh-100 bg-light">
+        <div class="container py-5 h-100">
+            <div class="row justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card shadow-lg" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <h3 class="mb-4 text-center">Login Form</h3>
+                        </div>
+                        <div class="card-body p-5">
+                            <form v-on:submit.prevent="submitForm">
+                                <!-- Email input -->
+                                <div data-mdb-input-init class="form-outline mb-4">
+                                    <label class="form-label" for="email">Email address</label>
+                                    <input type="email" id="email" v-model="email" class="form-control" />
+                                </div>
+                            
+                                <!-- Password input -->
+                                <div data-mdb-input-init class="form-outline mb-4">
+                                    <label class="form-label" for="password">Password</label>
+                                    <input type="password" id="password" v-model="password" class="form-control" />
+                                </div>
+                            
+                                <!-- Submit button -->
+                                <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign in</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-
-                <div class="col">
-                    <!-- Simple link -->
-                    <a href="#!">Forgot password?</a>
-                </div>
             </div>
-
-            <!-- Submit button -->
-            <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign in</button>
-
-            <!-- Register buttons -->
-            <div class="text-center">
-                <p>Not a member? <a href="#!">Register</a></p>
-                <p>or sign up with:</p>
-                <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-facebook-f"></i>
-                </button>
-          
-                <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-google"></i>
-                </button>
-          
-                <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-twitter"></i>
-                </button>
-          
-                <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-link btn-floating mx-1">
-                    <i class="fab fa-github"></i>
-                </button>
-            </div>
-        </form>
-    </div>
+        </div>
+    </section> 
 </template>
+<script>
+import axios from 'axios';
+import { auth } from '../../auth';
+export default {
+    data() {
+        return {
+            email: '',
+            password: '',
+            error: null,
+        };
+    },
+    methods: {
+        async submitForm() {
+            try {
+                await axios.get('/api/sanctum/csrf-cookie'); // wajib sebelum login
+
+                const response = await axios.post('/api/login', {
+                    email: this.email,
+                    password: this.password,  
+                }, {withCredentials: true});
+
+                // Simpan status login
+                localStorage.setItem('isLoggedIn', 'true');
+                auth.isAuthenticated = true;
+                
+                this.$router.push({ name: 'book' });
+            } catch (error) {
+                this.error = 'Login failed. Please check your credentials.';
+                console.error('Login error:', error);
+            }
+        }
+    }
+};
+</script>

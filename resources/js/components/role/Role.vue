@@ -1,5 +1,5 @@
 <template>
-    <section class="vh-100 bg-light">
+    <section class="vh-100">
         <div class="container py-5 h-100">
             <div class="row justify-content-left align-items-left h-100">
                 <div class="col-12">
