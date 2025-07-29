@@ -19,19 +19,21 @@ use App\Models\Loan;
 // ✅ Public Routes (Tidak Perlu Login)
 Route::post('/register', [RegisterController::class, 'registration']);
 Route::post('/login', [LoginController::class, 'login']);
+Route::get('/roles', fn () => response()->json(['roles' => Role::all()]));
 Route::get('/sanctum/csrf-cookie', fn () => response()->json(['message' => 'OK'])); // optional
 
-// ✅ Protected Routes (Perlu Login)
 Route::middleware('auth:sanctum')->group(function () {
-
     // Logout
     Route::post('/logout', [LoginController::class, 'logout']);
+});
+
+// ✅ Protected Routes (Perlu Login)
+Route::middleware(['auth:sanctum', 'role:Admin'])->group(function () {
 
     // Users
     Route::get('/users', fn () => response()->json(['users' => User::all()]));
 
     // Roles
-    Route::get('/roles', fn () => response()->json(['roles' => Role::all()]));
     Route::post('/role/create', [RoleController::class, 'store']);
     Route::put('/role/update/{id}', [RoleController::class, 'update']);
     Route::delete('/role/delete/{id}', [RoleController::class, 'destroy']);

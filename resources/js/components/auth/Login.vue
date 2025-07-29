@@ -54,7 +54,9 @@ export default {
 
                 // Simpan status login
                 localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userRole', response.data.user.role.name_role);
                 auth.isAuthenticated = true;
+                auth.role = response.data.user.role.name_role;
                 
                 this.$router.push({ name: 'book' });
             } catch (error) {

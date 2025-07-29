@@ -1,7 +1,13 @@
 <template>
   <div class="app-layout d-flex">
-    
-    <div v-if="auth.isAuthenticated" class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;">
+
+    <!-- Sidebar hanya muncul jika sudah login -->
+    <div
+      v-if="auth.isAuthenticated"
+      class="d-flex flex-column flex-shrink-0 p-3 bg-light"
+      style="width: 280px;"
+    >
+      <!-- Sidebar content -->
       <router-link to="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
         <svg class="bi me-2" width="40" height="32">
           <use xlink:href="#bootstrap" />
@@ -11,7 +17,7 @@
       <hr />
 
       <ul class="nav nav-pills flex-column mb-auto">
-        <li>
+        <li v-if="auth.role !== ''">
           <router-link to="/book" class="nav-link" active-class="active" exact>
             <svg class="bi me-2" width="16" height="16">
               <use xlink:href="#speedometer2" />
@@ -19,7 +25,7 @@
             Books
           </router-link>
         </li>
-        <li>
+        <li v-if="auth.role === 'Admin'">
           <router-link to="/member" class="nav-link" active-class="active" exact>
             <svg class="bi me-2" width="16" height="16">
               <use xlink:href="#table" />
@@ -27,7 +33,7 @@
             Members
           </router-link>
         </li>
-        <li>
+        <li v-if="auth.role !== ''">
           <router-link to="/loan" class="nav-link" active-class="active" exact>
             <svg class="bi me-2" width="16" height="16">
               <use xlink:href="#grid" />
@@ -46,8 +52,6 @@
       </ul>
 
       <hr />
-
-    
       <div class="dropdown">
         <a
           href="#"
@@ -74,12 +78,14 @@
         </ul>
       </div>
     </div>
+
     <!-- Main Content -->
     <div class="main-content flex-grow-1 d-flex flex-column">
       <main class="flex-grow-1 p-4">
-          <router-view />
+        <router-view />
       </main>
 
+      <!-- Footer hanya jika sudah login -->
       <footer v-if="auth.isAuthenticated" class="bg-light text-center py-3">
         <small>&copy; 2025 MyApp. All rights reserved.</small>
       </footer>
@@ -98,14 +104,15 @@ export default {
   },
   methods: {
     async logout() {
-        try {
-            await axios.post('/api/logout');
-            localStorage.removeItem('isLoggedIn');
-            auth.isAuthenticated = false;
-            this.$router.push({ path: '/' });
-        } catch (error) {
-            console.error('Logout error: ', error)
-        }
+      try {
+        await axios.post('/api/logout');
+        localStorage.removeItem('isLoggedIn');
+        auth.isAuthenticated = false;
+        auth.role = '';
+        this.$router.push({ path: '/' });
+      } catch (error) {
+        console.error('Logout error: ', error)
+      }
     }
   }
 };
