@@ -1,74 +1,88 @@
 <template>
-    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ form.id_book ? 'Edit Book' : 'Create Book' }}</h5>
-                    <button type="button" class="btn-close" @click="closeModal"></button>
-                </div>
-                <div class="modal-body">
-                    <form @submit.prevent="submitForm">
-                        <div class="mb-3">
-                            <label for="name_book" class="form-label">Title</label>
-                            <input type="text" class="form-control" v-model="form.name_book" id="name_book" placeholder="Enter book title">
-                        </div>
+    <div class="fixed inset-0 z-50 flex pt-20 items-center justify-center bg-gray-200/75 bg-opacity-100 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl mx-4 my-10">
+            <div class="px-6 py-4 border-b flex justify-between items-center">
+                <h2 class="text-xl font-semibold">{{ form.id_book ? 'Edit Book' : 'Create Book' }}</h2>
+                <button class="text-gray-500 hover:text-gray-800" @click="closeModal">&times;</button>
+            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="author" class="form-label">Author</label>
-                                <input type="text" class="form-control" v-model="form.author" id="author" placeholder="Enter author name">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="publisher" class="form-label">Publisher</label>
-                                <input type="text" class="form-control" v-model="form.publisher" id="publisher" placeholder="Enter publisher name">
-                            </div>
-                        </div>
+            <div class="px-6 py-4">
+                <form @submit.prevent="submitForm" class="space-y-4">
+                    <div class="mb-6">
+                        <label for="name_book" class="block text-sm font-medium text-gray-700 dark:text-white m-1.5">Title</label>
+                        <input type="text" id="name_book" v-model="form.name_book"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Title Books" required/>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="publication_date" class="form-label">Publication Date</label>
-                            <input type="date" class="form-control" v-model="form.publication_date" id="publication_date" required>
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <label for="author" class="block text-sm font-medium text-gray-700 m-1.5">Author</label>
+                            <input type="text" id="author" v-model="form.author"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                placeholder="Author Name" required/>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="id_category" class="form-label">Category</label>
-                                <select id="id_category" class="form-control" v-model.number="form.id_category">
-                                    <option value="" disabled>Choose Categories</option>
-                                    <option v-for="category in categories" :key="category.id_category" :value="category.id_category">
-                                        {{ category.name_category }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="stock" class="form-label">Stock</label>
-                                <input type="number" class="form-control" id="stock" v-model="form.stock" placeholder="Enter Book Stock">
-                            </div>
+                        <div>
+                            <label for="publisher" class="block text-sm font-medium text-gray-700 m-1.5">Publisher</label>
+                            <input type="text" id="publisher" v-model="form.publisher"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                placeholder="Publisher Name" required/>
                         </div>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="cover_book" class="form-label">Cover Book</label>
-                            <input type="file" class="form-control" @change="handleFileUpload" id="cover_book">
+                    <div>
+                        <label for="publication_date" class="block text-sm font-medium text-gray-700 m-1.5">Publication Date</label>
+                        <input type="date" id="publication_date" v-model="form.publication_date"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            required/>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="id_category" class="block text-sm font-medium text-gray-700 m-1.5">Category</label>
+                            <select id="id_category" v-model.number="form.id_category"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="" disabled>Pilih kategori</option>
+                                <option v-for="category in categories" :key="category.id_category" :value="category.id_category">
+                                    {{ category.name_category }}
+                                </option>
+                            </select>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" v-model="form.description" id="description" rows="3"></textarea>
+                        <div>
+                            <label for="stock" class="block text-sm font-medium text-gray-700 m-1.5">Stock</label>
+                            <input type="number" id="stock" v-model="form.stock"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         </div>
+                    </div>
 
-                        <div v-if="error" class="alert alert-danger">{{ error }}</div>
+                    <div>
+                        <label for="cover_book" class="block text-sm font-medium text-gray-700 m-1.5">Cover</label>
+                        <input type="file" id="cover_book" @change="handleFileUpload"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                    </div>
 
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                {{ form.id_book ? 'Update' : 'Create' }}
-                            </button>
-                            <button type="button" class="btn btn-secondary" @click="closeModal">Cancel</button>
-                        </div>
-                    </form>
-                </div>
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 m-1.5">Description</label>
+                        <textarea id="description" v-model="form.description" rows="3"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                    </div>
+
+                    <div v-if="error" class="text-red-600">{{ error }}</div>
+
+                    <div class="flex justify-end gap-2">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            {{ form.id_book ? 'Update' : 'Create' }}
+                        </button>
+                        <button type="button" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300" @click="closeModal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </template>
+
 
 <script>
 import axios from 'axios';

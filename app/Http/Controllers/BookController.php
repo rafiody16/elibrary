@@ -60,7 +60,7 @@ class BookController extends Controller
             'publication_date' => $request->publication_date,
             'description' => $request->description,
             'stock' => $request->stock,
-            'isbn' => Str::upper($request->isbn),
+            'isbn' => Str::random(16),
         ]);
 
         return response()->json([
@@ -138,5 +138,10 @@ class BookController extends Controller
             'success' => true,
             'message' => 'Book deleted successfully',
         ]);
+    }
+
+    public function getAvailableBookByUser(Request $request, $id)
+    {
+        
     }
 }

@@ -1,30 +1,37 @@
 <template>
-    <div class="modal-backdrop" style="position: fixed; background-color: rgba(0, 0, 0, 0.5); z-index: 1050;">
-        <div class="modal d-block" tabindex="-1" style="z-index: 1060;">
-            <div class="modal-dialog" style="max-width: 500px; margin: auto; top: 20%;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Create Category</h5>
-                        <button type="button" class="btn-close" @click="$emit('close')"></button>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-200/75 bg-opacity-100">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl mx-4 my-10">
+            <div class="px-6 py-4 border-b flex justify-between items-center">
+                <h2 class="text-xl font-semibold">{{ form.id_category ? 'Edit Category' : 'Create Category' }}</h2>
+                <button class="text-gray-500 hover:text-gray-800" @click="closeModal">&times;</button>
+            </div>
+
+            <div class="px-6 py-4">
+                <form @submit.prevent="submitForm" class="space-y-4">
+                    <div>
+                        <label for="name_category" class="block text-sm font-medium text-gray-700 dark:text-white m-1.5">Category</label>
+                        <input type="text" id="name_category" v-model="form.name_category"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Enter Category Book Name" required/>
                     </div>
-                    <div class="modal-body">
-                        <form @submit.prevent="submitForm">
-                            <div class="mb-3">
-                                <label for="name_category" class="form-label">Category Name</label>
-                                <input type="text" v-model="form.name_category" class="form-control" id="name_category" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="description" class="form-label">Description</label>
-                                <textarea v-model="form.description" id="description" class="form-control"></textarea>
-                            </div>
-                            <div v-if="error" class="alert alert-danger">{{ error }}</div>
-                            <div class="d-flex justify-content-end gap-2">
-                                <button type="submit" class="btn btn-primary">{{form.id_category ? 'Update' : 'Create'}}</button>
-                                <button type="button" class="btn btn-secondary ms-2" @click="$emit('close')">Cancel</button>
-                            </div>
-                        </form>       
+
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 m-1.5">Description</label>
+                        <textarea id="description" v-model="form.description" rows="3"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
                     </div>
-                </div>
+
+                    <div v-if="error" class="text-red-600">{{ error }}</div>
+
+                    <div class="flex justify-end gap-2">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            {{ form.id_category ? 'Update' : 'Create' }}
+                        </button>
+                        <button type="button" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300" @click="closeModal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

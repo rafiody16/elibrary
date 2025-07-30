@@ -1,69 +1,84 @@
 <template>
-    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ form.id_member ? 'Edit Member' : 'Create Member' }}</h5>
-                    <button type="button" class="btn-close" @click="closeModal"></button>
-                </div>
-                <div class="modal-body">
-                    <form @submit.prevent="submitForm">
-                        <div class="mb-3">
-                            <label for="name_member" class="form-label">Fullname</label>
-                            <input type="text" class="form-control" v-model="form.name_member" id="name_member" placeholder="Enter name member">
-                        </div>
+    <div class="fixed inset-0 z-50 flex pt-20 items-center justify-center bg-gray-200/75 bg-opacity-100 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl mx-4 my-10">
+            <div class="px-6 py-4 border-b flex justify-between items-center">
+                <h2 class="text-xl font-semibold">{{ form.id_member ? 'Edit Member' : 'Create Member' }}</h2>
+                <button class="text-gray-500 hover:text-gray-800" @click="closeModal">&times;</button>
+            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="place_of_birth" class="form-label">Place Of Birth</label>
-                                <input type="text" class="form-control" v-model="form.place_of_birth" id="place_of_birth" placeholder="Enter Place of Birth">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="date_of_birth" class="form-label">Date Of Birth</label>
-                                <input type="date" class="form-control" v-model="form.date_of_birth" id="date_of_birth">
-                            </div>
-                        </div>
+            <div class="px-6 py-4">
+                <form @submit.prevent="submitForm" class="space-y-4">
+                    <div>
+                        <label for="name_member" class="block text-sm font-medium text-gray-700 dark:text-white m-1.5">Fullname</label>
+                        <input type="text" id="name_member" v-model="form.name_member"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Enter Your Fullname" required/>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="address" class="form-label">Address</label>
-                            <input type="text" class="form-control" v-model="form.address" id="address" placeholder="Enter Address" required>
+                    <div class="grid gap-6 mb-6 md:grid-cols-2">
+                        <div>
+                            <label for="place_of_birth" class="block text-sm font-medium text-gray-700 m-1.5">Place Of Birth</label>
+                            <input type="text" id="place_of_birth" v-model="form.place_of_birth"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                placeholder="Enter Your Place of Birth" required/>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="phone_number" class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" v-model="form.phone_number" id="phone_number" placeholder="Enter Phone Number" required>
+                        <div>
+                            <label for="date_of_birth" class="block text-sm font-medium text-gray-700 m-1.5">Date Of Birth</label>
+                            <input type="date" id="date_of_birth" v-model="form.date_of_birth"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                required/>
                         </div>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="job" class="form-label">Job</label>
-                            <input type="text" class="form-control" v-model="form.job" id="job" placeholder="Enter Job Name" required>
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700 m-1.5">Address</label>
+                        <input type="text" id="address" v-model="form.address"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            placeholder="Enter Your Address" required/>
+                    </div>
+
+                    <div>
+                        <label for="phone_number" class="block text-sm font-medium text-gray-700 m-1.5">Phone Number</label>
+                        <input type="text" id="phone_number" v-model="form.phone_number"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            placeholder="Enter Your Phone Number" required/>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="job" class="block text-sm font-medium text-gray-700 m-1.5">Job</label>
+                            <input type="job" id="stock" v-model="form.job"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                         </div>
-
-                        <div class="mb-3">
-                            <label for="id_user" class="form-label">Account User</label>
-                            <select id="id_user" class="form-control" v-model.number="form.id_user">
-                                <option value="" disabled>Choose User</option>
+                        <div>
+                            <label for="id_user" class="block text-sm font-medium text-gray-700 m-1.5">User Account</label>
+                            <select id="id_user" v-model.number="form.id_user"
+                                class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="" disabled>Pilih Account</option>
                                 <option v-for="user in users" :key="user.id" :value="user.id">
                                     {{ user.name }}
                                 </option>
                             </select>
                         </div>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="photo_member" class="form-label">Photo Member</label>
-                            <input type="file" class="form-control" @change="handleFileUpload" id="photo_member">
-                        </div>
+                    <div>
+                        <label for="photo_member" class="block text-sm font-medium text-gray-700 m-1.5">Photo Member</label>
+                        <input type="file" id="photo_member" @change="handleFileUpload"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                    </div>
 
-                        <div v-if="error" class="alert alert-danger">{{ error }}</div>
+                    <div v-if="error" class="text-red-600">{{ error }}</div>
 
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                {{ form.id_member ? 'Update' : 'Create' }}
-                            </button>
-                            <button type="button" class="btn btn-secondary" @click="closeModal">Cancel</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="flex justify-end gap-2">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            {{ form.id_member ? 'Update' : 'Create' }}
+                        </button>
+                        <button type="button" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300" @click="closeModal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

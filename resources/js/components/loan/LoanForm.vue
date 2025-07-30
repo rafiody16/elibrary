@@ -1,49 +1,54 @@
 <template>
-    <div class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{ form.id_loan ? 'Edit Loan' : 'Create Loan' }}</h5>
-                    <button type="button" class="btn-close" @click="closeModal"></button>
-                </div>
-                <div class="modal-body">
-                    <form @submit.prevent="submitForm">
-                        <div class="mb-3">
-                            <label for="id_member" class="form-label">Borrower</label>
-                            <select id="id_member" class="form-control" v-model.number="form.id_member">
-                                <option value="" disabled>Choose Member</option>
-                                <option v-for="member in members" :key="member.id_member" :value="member.id_member">
-                                    {{ member.name_member }}
-                                </option>
-                            </select>
-                        </div>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-200/75 bg-opacity-100">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-3xl mx-4 my-10">
+            <div class="px-6 py-4 border-b flex justify-between items-center">
+                <h2 class="text-xl font-semibold">{{ form.id_loan ? 'Edit Loan' : 'Create Loan' }}</h2>
+                <button class="text-gray-500 hover:text-gray-800" @click="closeModal">&times;</button>
+            </div>
 
-                        <div class="mb-3">
-                            <label for="id_book" class="form-label">Book</label>
-                            <select id="id_book" class="form-control" v-model.number="form.id_book">
-                                <option value="" disabled>Choose Member</option>
-                                <option v-for="book in books" :key="book.id_book" :value="book.id_book">
-                                    {{ book.name_book }}
-                                </option>
-                            </select>
-                        </div>
+            <div class="px-6 py-4">
+                <form @submit.prevent="submitForm" class="space-y-4">
 
-                        <div class="mb-3">
-                            <label for="loan_date" class="form-label">Loan Date</label>
-                            <input type="date" class="form-control" v-model="form.loan_date" id="loan_date" required>
+                    <div>
+                        <label for="id_book" class="block text-sm font-medium text-gray-700 m-1.5">Books</label>
+                        <select id="id_book" v-model.number="form.id_book"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="" disabled>Choose Books</option>
+                            <option v-for="book in filteredBooks" :key="book.id_book" :value="book.id_book">
+                                {{ book.name_book }}
+                            </option>
+                        </select>
+                    </div>
 
-                        </div>
+                    <div>
+                        <label for="id_member" class="block text-sm font-medium text-gray-700 m-1.5">Members</label>
+                        <select id="id_member" v-model.number="form.id_member"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="" disabled>Choose Members</option>
+                            <option v-for="member in members" :key="member.id_member" :value="member.id_member">
+                                {{ member.name_member }}
+                            </option>
+                        </select>
+                    </div>
 
-                        <div v-if="error" class="alert alert-danger">{{ error }}</div>
+                    <div>
+                        <label for="loan_date" class="block text-sm font-medium text-gray-700 dark:text-white m-1.5">Category</label>
+                        <input type="date" id="loan_date" v-model="form.loan_date"
+                            class="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-ful p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            required/>
+                    </div>
 
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                {{ form.id_loan ? 'Update' : 'Create' }}
-                            </button>
-                            <button type="button" class="btn btn-secondary" @click="closeModal">Cancel</button>
-                        </div>
-                    </form>
-                </div>
+                    <div v-if="error" class="text-red-600">{{ error }}</div>
+
+                    <div class="flex justify-end gap-2">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            {{ form.id_loan ? 'Update' : 'Create' }}
+                        </button>
+                        <button type="button" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300" @click="closeModal">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -93,6 +98,14 @@ export default {
     mounted() {
         this.getMembers();
         this.getBooks();
+    },
+    computed: {
+        filteredBooks() {
+            if (this.form.id_loan) {
+                return this.books.filter( book => book.id_book !== this.form.id_book)
+            }
+            return this.books;
+        }
     },
     methods: {
         submitForm() {
